@@ -315,6 +315,13 @@ textarea {
   color: var(--brand) !important;
 }
 
+.page-hero:not(.page-hero--form) .grid.gap-2.sm\:grid-cols-3 > div {
+  background: rgba(11, 49, 101, 0.82) !important;
+  border-color: rgba(222, 234, 250, 0.92) !important;
+  color: #f3f8ff !important;
+  text-shadow: none !important;
+}
+
 .page-hero:not(.page-hero--form) a:not(.button-solid):not(.button-ghost) {
   color: #fff;
 }
@@ -1478,6 +1485,14 @@ img[loading="lazy"].is-loaded {
 
   .neighborhood-story-image {
     height: clamp(12.5rem, 58vw, 17rem);
+  }
+
+  .home-feature .home-feature-media {
+    order: -1;
+  }
+
+  .home-feature .home-feature-copy {
+    order: 0;
   }
 
   .neighborhood-services .mt-10.grid.gap-6.md\:grid-cols-3 > .soft-card {
