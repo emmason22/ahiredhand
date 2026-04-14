@@ -116,6 +116,28 @@
   } catch (_error) {
     storage = null;
   }
+  const LEAD_BACKUP_STORAGE_KEY = "ahh_lead_backups";
+  const MAX_LEAD_BACKUPS = 30;
+
+  const readLeadBackups = () => {
+    if (!storage) return [];
+    try {
+      const raw = storage.getItem(LEAD_BACKUP_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_error) {
+      return [];
+    }
+  };
+
+  const writeLeadBackups = (entries) => {
+    if (!storage) return;
+    try {
+      storage.setItem(LEAD_BACKUP_STORAGE_KEY, JSON.stringify(entries.slice(-MAX_LEAD_BACKUPS)));
+    } catch (_error) {
+      // no-op
+    }
+  };
 
   if (!storage) return;
 
@@ -373,6 +395,8 @@
     const submitLabel = submitButton?.getAttribute("data-submit-label") || "Send";
     const mode = quoteForm.getAttribute("data-quote-form-mode") || "quote";
     const isMatchingForm = !submittedForm || submittedForm === mode;
+    const backupIdField = quoteForm.querySelector("[data-backup-id]");
+    const replyToField = quoteForm.querySelector("input[name='_replyto']");
 
     const setStatus = (message, type) => {
       if (!statusBox) return;
@@ -425,6 +449,33 @@
 
       if (!submitButton) return;
 
+      const emailField = quoteForm.querySelector("input[type='email']");
+      if (replyToField && emailField) {
+        replyToField.value = emailField.value.trim();
+      }
+
+      const backupId = `lead_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+      if (backupIdField) {
+        backupIdField.value = backupId;
+      }
+
+      const submissionSnapshot = {};
+      for (const [key, value] of new FormData(quoteForm).entries()) {
+        if (!key || key === "_honey") continue;
+        submissionSnapshot[key] = typeof value === "string" ? value : "";
+      }
+      const leadBackups = readLeadBackups();
+      leadBackups.push({
+        id: backupId,
+        leadType: "quote",
+        formType: mode,
+        pagePath: window.location.pathname,
+        createdAt: new Date().toISOString(),
+        status: "pending",
+        fields: submissionSnapshot
+      });
+      writeLeadBackups(leadBackups);
+
       window.ahhTrackEvent("quote_submit_attempt", {
         lead_type: "quote",
         form_type: mode,
@@ -434,7 +485,7 @@
       try {
         window.sessionStorage.setItem(
           "ahh_pending_lead",
-          JSON.stringify({ leadType: "quote", formType: mode, timestamp: Date.now() })
+          JSON.stringify({ leadType: "quote", formType: mode, backupId, timestamp: Date.now() })
         );
       } catch (_error) {
         // no-op
@@ -488,6 +539,29 @@
 
   if (subline && formType === "quick") {
     subline.textContent = "Quick quote requests are usually reviewed within a few business hours.";
+  }
+
+  try {
+    const pendingRaw = window.sessionStorage.getItem("ahh_pending_lead");
+    if (pendingRaw) {
+      const pendingLead = JSON.parse(pendingRaw);
+      const backupId = pendingLead?.backupId;
+      if (backupId) {
+        const key = "ahh_lead_backups";
+        const existing = JSON.parse(window.localStorage.getItem(key) || "[]");
+        if (Array.isArray(existing)) {
+          const updated = existing.map((entry) =>
+            entry && entry.id === backupId
+              ? { ...entry, status: "sent", sentAt: new Date().toISOString() }
+              : entry
+          );
+          window.localStorage.setItem(key, JSON.stringify(updated));
+        }
+      }
+    }
+    window.sessionStorage.removeItem("ahh_pending_lead");
+  } catch (_error) {
+    // no-op
   }
 
   try {

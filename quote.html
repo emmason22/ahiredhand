@@ -24,42 +24,9 @@
   <meta name="twitter:title" content="Request a Dallas Cleaning Quote | A Hired Hand" />
   <meta name="twitter:description" content="Request a cleaning quote for your Dallas apartment, condo, or home in The Village with A Hired Hand." />
   <meta name="twitter:image" content="https://www.ahiredhand.net/assets/images/quote-hero.jpg" />
-  <script src="assets/js/tailwindcdn-forms.js"></script>
   <link href="https://fonts.googleapis.com/css2?family=Work+Sans:wght@400;500;600;700;800&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet" />
+  <link href="assets/css/tailwind-static.css" rel="stylesheet" />
   <link href="assets/css/styles.css" rel="stylesheet" />
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          colors: {
-            primary: "#0B3165",
-            primary_dim: "#08274F",
-            primary_container: "#D8E6F7",
-            secondary: "#1973D1",
-            village_green: "#1973D1",
-            secondary_container: "#EAF3FE",
-            tertiary: "#F7C51E",
-            tertiary_container: "#FFF7DF",
-            background: "#FFFFFF",
-            surface_container_low: "#FFFFFF",
-            surface_container_lowest: "#ffffff",
-            surface_container_high: "#F7FAFE",
-            surface_container_highest: "#EAF1FA",
-            on_surface: "#333333",
-            on_surface_variant: "#4A4A4A",
-            on_primary: "#ffffff"
-          },
-          fontFamily: {
-            headline: ["Work Sans", "sans-serif"],
-            body: ["Work Sans", "sans-serif"]
-          },
-          boxShadow: {
-            ambient: "0 30px 60px -20px rgba(31,35,40,0.14)"
-          }
-        }
-      }
-    };
-  </script>
   <style>
     .glass-nav { background: rgba(255, 255, 255, 0.94); backdrop-filter: blur(20px); }
   </style>
@@ -98,8 +65,18 @@
             { "@type": "Place", "name": "The Village, Dallas" },
             { "@type": "Place", "name": "Dallas" },
             { "@type": "Place", "name": "East Dallas" },
+            { "@type": "Place", "name": "Deep Ellum" },
+            { "@type": "Place", "name": "Downtown Dallas" },
+            { "@type": "Place", "name": "Uptown Dallas" },
+            { "@type": "Place", "name": "Oak Lawn" },
             { "@type": "Place", "name": "Lakewood" },
-            { "@type": "Place", "name": "Lake Highlands" }
+            { "@type": "Place", "name": "Lake Highlands" },
+            { "@type": "Place", "name": "North Dallas" },
+            { "@type": "Place", "name": "Oak Cliff" },
+            { "@type": "Place", "name": "University Park" },
+            { "@type": "Place", "name": "Plano" },
+            { "@type": "Place", "name": "Richardson" },
+            { "@type": "Place", "name": "Las Colinas" }
           ]
         }
       ]
@@ -246,11 +223,14 @@
                 action="https://formsubmit.co/ahiredhandmaidservice@gmail.com"
                 method="POST">
                 <input type="hidden" name="_subject" value="New Quick Quote Request - A Hired Hand" />
-                <input type="hidden" name="_captcha" value="false" />
+                <input type="hidden" name="_captcha" value="true" />
+                <input type="hidden" name="_cc" value="ahiredhandmaidservice+backup@gmail.com" />
                 <input type="hidden" name="_template" value="table" />
                 <input type="hidden" name="_next" value="https://www.ahiredhand.net/thank-you.html?lead=quote&form=quick" />
                 <input type="hidden" name="_autoresponse" value="Thanks for reaching out to A Hired Hand. We received your quick quote request and will follow up shortly." />
+                <input type="hidden" name="_replyto" id="quick-replyto" />
                 <input aria-hidden="true" autocomplete="off" tabindex="-1" type="text" name="_honey" class="hidden" />
+                <input type="hidden" name="lead_backup_id" data-backup-id />
                 <input type="hidden" name="quick_area" id="quick-area" />
                 <input type="hidden" name="quick_contact_note" id="quick-contact-note" />
                 <input type="hidden" name="utm_source" data-attribution-field="utm_source" />
@@ -315,11 +295,14 @@
               action="https://formsubmit.co/ahiredhandmaidservice@gmail.com"
               method="POST">
               <input type="hidden" name="_subject" value="New Quote Request - A Hired Hand" />
-              <input type="hidden" name="_captcha" value="false" />
+              <input type="hidden" name="_captcha" value="true" />
+              <input type="hidden" name="_cc" value="ahiredhandmaidservice+backup@gmail.com" />
               <input type="hidden" name="_template" value="table" />
               <input type="hidden" name="_next" value="https://www.ahiredhand.net/thank-you.html?lead=quote&form=detailed" />
               <input type="hidden" name="_autoresponse" value="Thanks for reaching out to A Hired Hand. We received your quote request and will follow up with next steps." />
+              <input type="hidden" name="_replyto" id="detailed-replyto" />
               <input aria-hidden="true" autocomplete="off" tabindex="-1" type="text" name="_honey" class="hidden" />
+              <input type="hidden" name="lead_backup_id" data-backup-id />
               <input type="hidden" name="area" id="detailed-area" />
               <input type="hidden" name="utm_source" data-attribution-field="utm_source" />
               <input type="hidden" name="utm_medium" data-attribution-field="utm_medium" />
@@ -473,6 +456,7 @@
       </div>
     </div>
   </footer>
+  <script src="assets/js/analytics-config.js"></script>
   <script defer src="assets/js/site.js"></script>
 </body>
 </html>

@@ -1291,7 +1291,7 @@ textarea {
 }
 
 .neighborhood-services .mt-10.grid.gap-6.md\:grid-cols-3 > .soft-card:nth-child(3)::before {
-  background-image: url("../images/MoveOut.png");
+  background-image: url("../images/dallas-move-in-move-out-cleaning-hero.jpg");
 }
 
 .neighborhood-services .mt-10.grid.gap-6.md\:grid-cols-3 > .soft-card:nth-child(even)::before {
