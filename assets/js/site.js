@@ -381,6 +381,7 @@
       setInputValue("quick-email", incomingContact);
       setInputValue("email", incomingContact);
     } else {
+      setInputValue("quick-phone", incomingContact);
       setInputValue("phone", incomingContact);
     }
     setInputValue("quick-contact-note", incomingContact);
@@ -452,6 +453,15 @@
       const emailField = quoteForm.querySelector("input[type='email']");
       if (replyToField && emailField) {
         replyToField.value = emailField.value.trim();
+      }
+
+      if (mode === "quick") {
+        const quickEmail = quoteForm.querySelector("input[name='quick_email']")?.value?.trim() || "";
+        const quickPhone = quoteForm.querySelector("input[name='quick_phone']")?.value?.trim() || "";
+        const quickContactNote = quoteForm.querySelector("input[name='quick_contact_note']");
+        if (quickContactNote) {
+          quickContactNote.value = [quickEmail, quickPhone].filter(Boolean).join(" | ");
+        }
       }
 
       const backupId = `lead_${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
