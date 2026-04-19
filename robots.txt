@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://www.ahiredhand.net/sitemap.xml
+Sitemap: https://ahiredhand.net/sitemap.xml
