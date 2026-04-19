@@ -6,7 +6,7 @@
   // googleAdsQuoteConversionLabel: "AbCdEFgHiJkLmNoPqR"
   // googleAdsContactConversionLabel: "ZyXwVuTsRqPoNmLkJi"
   window.AHH_ANALYTICS_CONFIG = window.AHH_ANALYTICS_CONFIG || {
-    ga4MeasurementId: "",
+    ga4MeasurementId: "G-8Q3FLQG71C",
     googleAdsId: "",
     googleAdsQuoteConversionLabel: "",
     googleAdsContactConversionLabel: ""
