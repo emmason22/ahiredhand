@@ -362,6 +362,34 @@
   const incomingTiming = getParam("preferred_timing");
   const incomingContact = getParam("contact");
   const incomingArea = getParam("area");
+  const formatEmailFallbackMessage = (email) =>
+    `We could not reach our quote system right now. Please email ${email} and we will follow up quickly.`;
+  const parseFormSubmitEmail = (actionUrl) => {
+    if (!actionUrl) return "ahiredhandmaidservice@gmail.com";
+    const match = actionUrl.match(/formsubmit\.co\/([^/?#]+)/i);
+    if (!match?.[1]) return "ahiredhandmaidservice@gmail.com";
+    return decodeURIComponent(match[1]);
+  };
+
+  const checkFormEndpoint = async (actionUrl) => {
+    if (!actionUrl || typeof window.fetch !== "function") return true;
+    const controller = typeof window.AbortController === "function" ? new window.AbortController() : null;
+    const timeout = window.setTimeout(() => controller?.abort(), 5000);
+
+    try {
+      await window.fetch(actionUrl, {
+        method: "HEAD",
+        mode: "no-cors",
+        cache: "no-store",
+        signal: controller?.signal
+      });
+      return true;
+    } catch (_error) {
+      return false;
+    } finally {
+      window.clearTimeout(timeout);
+    }
+  };
 
   if (incomingName) {
     setInputValue("quick-name", incomingName);
@@ -398,6 +426,8 @@
     const isMatchingForm = !submittedForm || submittedForm === mode;
     const backupIdField = quoteForm.querySelector("[data-backup-id]");
     const replyToField = quoteForm.querySelector("input[name='_replyto']");
+    const formAction = quoteForm.getAttribute("action") || "";
+    const fallbackEmail = parseFormSubmitEmail(formAction);
 
     const setStatus = (message, type) => {
       if (!statusBox) return;
@@ -431,7 +461,7 @@
       setStatus("Thanks, your quote request was sent. We will follow up as soon as possible.", "success");
     }
 
-    quoteForm.addEventListener("submit", (event) => {
+    quoteForm.addEventListener("submit", async (event) => {
       quoteForm.classList.add("ahh-validated");
 
       quoteForm.querySelectorAll("input, select, textarea").forEach((field) => {
@@ -444,9 +474,12 @@
       });
 
       if (!quoteForm.checkValidity()) {
+        event.preventDefault();
         setStatus("Please review the highlighted fields and try again.", "error");
         return;
       }
+
+      event.preventDefault();
 
       if (!submitButton) return;
 
@@ -504,11 +537,23 @@
       submitButton.disabled = true;
       submitButton.setAttribute("aria-busy", "true");
       submitButton.textContent = "Sending...";
-      window.setTimeout(() => {
+
+      const endpointAvailable = await checkFormEndpoint(formAction);
+      if (!endpointAvailable) {
+        setStatus(formatEmailFallbackMessage(fallbackEmail), "error");
+        window.ahhTrackEvent("quote_submit_error", {
+          lead_type: "quote",
+          form_type: mode,
+          page_path: window.location.pathname,
+          error_reason: "endpoint_unavailable"
+        });
         submitButton.disabled = false;
         submitButton.removeAttribute("aria-busy");
         submitButton.textContent = submitLabel;
-      }, 9000);
+        return;
+      }
+
+      quoteForm.submit();
     });
 
     quoteForm.querySelectorAll("input, select, textarea").forEach((field) => {
