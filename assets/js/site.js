@@ -588,8 +588,12 @@
     title.textContent = "Thanks for Reaching Out";
   }
 
+  if (title && leadType === "quote") {
+    title.textContent = "Quote Request Received";
+  }
+
   if (message && leadType === "quote") {
-    message.textContent = "Your quote request is in. We will review your details and follow up shortly.";
+    message.textContent = "Thanks - your quote request was sent. We will review your details and follow up shortly.";
   }
 
   if (subline && formType === "quick") {
