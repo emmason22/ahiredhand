@@ -331,6 +331,28 @@
     storage = null;
   }
 
+  // Keep a local copy of a pending lead so a provider outage does not erase it.
+  const LEAD_BACKUP_STORAGE_KEY = "ahh_lead_backups";
+  const MAX_LEAD_BACKUPS = 30;
+  const readLeadBackups = () => {
+    if (!storage) return [];
+    try {
+      const raw = storage.getItem(LEAD_BACKUP_STORAGE_KEY);
+      const parsed = raw ? JSON.parse(raw) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (_error) {
+      return [];
+    }
+  };
+  const writeLeadBackups = (entries) => {
+    if (!storage) return;
+    try {
+      storage.setItem(LEAD_BACKUP_STORAGE_KEY, JSON.stringify(entries.slice(-MAX_LEAD_BACKUPS)));
+    } catch (_error) {
+      // no-op
+    }
+  };
+
   const getAttributionValue = (key) => {
     const fromParam = getParam(key);
     if (fromParam) return fromParam;
