@@ -450,6 +450,8 @@
     const replyToField = quoteForm.querySelector("input[name='_replyto']");
     const formAction = quoteForm.getAttribute("action") || "";
     const fallbackEmail = parseFormSubmitEmail(formAction);
+    const startedAtField = quoteForm.querySelector("[data-form-started-at]");
+    if (startedAtField) startedAtField.value = String(Date.now());
 
     const setStatus = (message, type) => {
       if (!statusBox) return;
@@ -502,6 +504,12 @@
       }
 
       event.preventDefault();
+
+      const startedAt = Number.parseInt(startedAtField?.value || "", 10);
+      if (!Number.isFinite(startedAt) || Date.now() - startedAt < 3000) {
+        setStatus("Please take a moment to review your quote details, then try again.", "error");
+        return;
+      }
 
       if (!submitButton) return;
 
